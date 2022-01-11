@@ -13,10 +13,10 @@ LOG_MODULE_REGISTER(app);
 
 #define BUF_SIZE 	64
 
-#define PIN_SCK 	10
-#define PIN_CS 		7
-#define PIN_MOSI 	8
-#define PIN_MISO 	9
+#define PIN_SCK 	28
+#define PIN_CS 		31
+#define PIN_MOSI 	29
+#define PIN_MISO 	30
 
 nrfx_spis_t spis = NRFX_SPIS_INSTANCE(0);
 
@@ -39,10 +39,8 @@ void spis_evt_handler(nrfx_spis_evt_t const * p_event, void * p_context)
 			memcpy(rx_buf2, rx_buf1, p_event->tx_amount);
 		
 			printk("SPIS transfer done! Sent %dbytes and received %d bytes.\n TX:", p_event->tx_amount, p_event->rx_amount);
-			snprintk(tx_buf2, p_event->tx_amount, "h");
-			printk("\nRX: ");
-			snprintk(rx_buf2, p_event->rx_amount, "h");
-			printk("\n");
+			printk("\nRX: %s\n", rx_buf1);
+			printk("\nTX: %s\n", tx_buf1);
 
 			err = nrfx_spis_buffers_set(&spis, tx_buf1, BUF_SIZE, rx_buf1, BUF_SIZE);
 			__ASSERT(err == 0, "Failed to prepare spis buffers");
@@ -90,6 +88,8 @@ void main(void)
 	
 	init_spis();
 	printk("Initialized the SPIS peripheral!\n");
+
+	strcpy(tx_buf1, "Hello!\n");
 
 	while(1)
 	{
