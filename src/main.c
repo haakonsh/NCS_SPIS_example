@@ -35,12 +35,12 @@ void spis_evt_handler(nrfx_spis_evt_t const * p_event, void * p_context)
 			break;
 
 		case NRFX_SPIS_XFER_DONE:
-			memcpy(tx_buf2, tx_buf1, p_event->tx_amount);			
+			memcpy(tx_buf1, tx_buf2, p_event->tx_amount);			
 			memcpy(rx_buf2, rx_buf1, p_event->tx_amount);
 		
-			printk("SPIS transfer done! Sent %dbytes and received %d bytes.\n TX:", p_event->tx_amount, p_event->rx_amount);
-			printk("\nRX: %s\n", rx_buf1);
-			printk("\nTX: %s\n", tx_buf1);
+			printk("SPIS transfer done! Sent %dbytes and received %d bytes.\n\n", p_event->tx_amount, p_event->rx_amount);
+			printk("RX: %s\n", rx_buf1);
+			printk("TX: %s\n", tx_buf1);
 
 			err = nrfx_spis_buffers_set(&spis, tx_buf1, BUF_SIZE, rx_buf1, BUF_SIZE);
 			__ASSERT(err == 0, "Failed to prepare spis buffers");
@@ -89,7 +89,7 @@ void main(void)
 	init_spis();
 	printk("Initialized the SPIS peripheral!\n");
 
-	strcpy(tx_buf1, "Hello!\n");
+	strcpy(tx_buf2, "Hello!");
 
 	while(1)
 	{
